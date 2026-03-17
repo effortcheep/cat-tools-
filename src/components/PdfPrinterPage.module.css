@@ -1,0 +1,71 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.actions {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.printButton {
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #396cd8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(57, 108, 216, 0.3);
+}
+
+.printButton:hover:not(:disabled) {
+  background-color: #2855b0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(57, 108, 216, 0.4);
+}
+
+.printButton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(57, 108, 216, 0.3);
+}
+
+.printButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.progress {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #e3f2fd;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  color: #1976d2;
+}
+
+@media (prefers-color-scheme: dark) {
+  .printButton {
+    background-color: #4a7fd8;
+    box-shadow: 0 4px 6px rgba(74, 127, 216, 0.3);
+  }
+
+  .printButton:hover:not(:disabled) {
+    background-color: #3a6fc8;
+    box-shadow: 0 6px 12px rgba(74, 127, 216, 0.4);
+  }
+
+  .printButton:disabled {
+    background-color: #555;
+  }
+
+  .progress {
+    background-color: #1a3a5c;
+    color: #90caf9;
+  }
+}

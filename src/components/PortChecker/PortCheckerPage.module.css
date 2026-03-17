@@ -1,0 +1,316 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.searchBox {
+  flex: 1;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #396cd8;
+  box-shadow: 0 0 0 2px rgba(57, 108, 216, 0.2);
+}
+
+.refreshButton {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #396cd8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.refreshButton:hover:not(:disabled) {
+  background-color: #2855b0;
+}
+
+.refreshButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error {
+  padding: 12px 16px;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.tableContainer {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.protocol {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.protocolTcp {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.protocolUdp {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.state {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.stateListening {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.stateEstablished {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.stateTimeWait {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.stateCloseWait {
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+.killButton {
+  padding: 4px 12px;
+  font-size: 12px;
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.killButton:hover:not(:disabled) {
+  background-color: #ff1744;
+}
+
+.killButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loading {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+}
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #999;
+}
+
+.footer {
+  margin-top: 16px;
+  padding: 12px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Dialog */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dialog h3 {
+  margin: 0 0 16px 0;
+  color: #333;
+}
+
+.dialog p {
+  margin: 0 0 12px 0;
+  color: #666;
+}
+
+.dialog ul {
+  margin: 0 0 20px 0;
+  padding-left: 20px;
+  color: #666;
+}
+
+.dialog li {
+  margin-bottom: 8px;
+}
+
+.dialogButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #396cd8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.dialogButton:hover {
+  background-color: #2855b0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .searchInput {
+    background-color: #333;
+    border-color: #444;
+    color: #f0f0f0;
+  }
+
+  .tableContainer {
+    background-color: #2a2a2a;
+    border-color: #444;
+  }
+
+  .table th {
+    background-color: #333;
+    color: #f0f0f0;
+  }
+
+  .table td {
+    border-bottom-color: #444;
+    color: #e0e0e0;
+  }
+
+  .table tbody tr:hover {
+    background-color: #3a3a3a;
+  }
+
+  .error {
+    background-color: #3a1a1a;
+    color: #ff8a80;
+  }
+
+  .loading {
+    color: #aaa;
+  }
+
+  .empty {
+    color: #888;
+  }
+
+  .footer {
+    color: #aaa;
+  }
+
+  .dialog {
+    background-color: #2a2a2a;
+  }
+
+  .dialog h3 {
+    color: #f0f0f0;
+  }
+
+  .dialog p,
+  .dialog ul {
+    color: #aaa;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .searchBox {
+    width: 100%;
+  }
+
+  .table {
+    font-size: 12px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+  }
+}

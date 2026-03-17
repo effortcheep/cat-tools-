@@ -1,0 +1,206 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  min-height: 100vh;
+}
+
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.category {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.categoryIcon {
+  font-size: 24px;
+}
+
+.categoryName {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.toolsRow {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.toolCard {
+  flex: 0 0 280px;
+  background-color: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.toolCard:hover {
+  border-color: #396cd8;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(57, 108, 216, 0.15);
+}
+
+.toolIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.toolName {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.toolDescription {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.toolContainer {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.backButton {
+  background: none;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.backButton:hover {
+  border-color: #396cd8;
+  color: #396cd8;
+  background-color: #f0f4ff;
+}
+
+.footer {
+  text-align: center;
+  padding: 40px 0;
+  color: #999;
+  font-size: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .title {
+    color: #f0f0f0;
+  }
+
+  .subtitle {
+    color: #aaa;
+  }
+
+  .category {
+    background-color: #2a2a2a;
+  }
+
+  .categoryHeader {
+    border-bottom-color: #444;
+  }
+
+  .categoryName {
+    color: #f0f0f0;
+  }
+
+  .toolCard {
+    background-color: #333;
+    border-color: #444;
+  }
+
+  .toolCard:hover {
+    border-color: #5a8ad8;
+    background-color: #3a3a3a;
+  }
+
+  .toolName {
+    color: #f0f0f0;
+  }
+
+  .toolDescription {
+    color: #aaa;
+  }
+
+  .backButton {
+    border-color: #444;
+    color: #aaa;
+    background-color: transparent;
+  }
+
+  .backButton:hover {
+    border-color: #5a8ad8;
+    color: #5a8ad8;
+    background-color: #2a3848;
+  }
+
+  .footer {
+    color: #666;
+  }
+}
+
+@media (max-width: 768px) {
+  .toolsRow {
+    flex-direction: column;
+  }
+
+  .toolCard {
+    flex: 1 1 auto;
+  }
+}

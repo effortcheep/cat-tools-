@@ -1,0 +1,66 @@
+.dropZone {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.dropZone:hover {
+  border-color: #396cd8;
+  background-color: #f0f4ff;
+}
+
+.dragging {
+  border-color: #396cd8;
+  background-color: #e8f0ff;
+  border-style: solid;
+}
+
+.content {
+  pointer-events: none;
+}
+
+.icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.text {
+  font-size: 16px;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.hint {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dropZone {
+    border-color: #555;
+    background-color: #2a2a2a;
+  }
+
+  .dropZone:hover {
+    border-color: #5a8ad8;
+    background-color: #2a3540;
+  }
+
+  .dragging {
+    border-color: #5a8ad8;
+    background-color: #2a3848;
+  }
+
+  .text {
+    color: #e0e0e0;
+  }
+
+  .hint {
+    color: #888;
+  }
+}

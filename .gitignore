@@ -1,0 +1,5 @@
+node_modules
+dist
+
+# Tauri build
+target/

@@ -1,0 +1,226 @@
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.presetButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #f0f4ff;
+  border: 1px solid #d0d8e8;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #396cd8;
+}
+
+.presetButton:hover {
+  background-color: #396cd8;
+  color: white;
+  border-color: #396cd8;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.fieldSelect {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.fieldSelect:hover {
+  border-color: #396cd8;
+}
+
+.fieldSelect:focus {
+  outline: none;
+  border-color: #396cd8;
+  box-shadow: 0 0 0 2px rgba(57, 108, 216, 0.2);
+}
+
+.result {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.expression {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background-color: #2d2d2d;
+  border-radius: 6px;
+}
+
+.expression code {
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 16px;
+  color: #7ee787;
+  word-break: break-all;
+}
+
+.copyButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #396cd8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.copyButton:hover {
+  background-color: #2855b0;
+}
+
+.copied {
+  background-color: #4caf50 !important;
+}
+
+.error {
+  padding: 12px;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.description strong {
+  color: #333;
+}
+
+.executionList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.executionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 14px;
+  color: #333;
+}
+
+.executionNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #396cd8;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sectionTitle {
+    color: #e0e0e0;
+    border-bottom-color: #444;
+  }
+
+  .presetButton {
+    background-color: #2a3848;
+    border-color: #3a4858;
+    color: #8ab4f8;
+  }
+
+  .presetButton:hover {
+    background-color: #4a7fd8;
+    color: white;
+  }
+
+  .fieldLabel {
+    color: #aaa;
+  }
+
+  .fieldSelect {
+    background-color: #333;
+    border-color: #444;
+    color: #f0f0f0;
+  }
+
+  .result {
+    background-color: #2a2a2a;
+    border-color: #444;
+  }
+
+  .description {
+    color: #aaa;
+  }
+
+  .description strong {
+    color: #f0f0f0;
+  }
+
+  .executionItem {
+    background-color: #333;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+
+  .error {
+    background-color: #3a1a1a;
+    color: #ff8a80;
+  }
+}
