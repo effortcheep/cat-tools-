@@ -52,7 +52,13 @@ impl Printer {
     fn from_powershell_json(json: &serde_json::Value) -> Option<Self> {
         let name = json.get("Name")?.as_str()?.to_string();
         let is_default = json.get("IsDefault")
-            .and_then(|v| v.as_bool())
+            .and_then(|v| {
+                if v.is_null() {
+                    Some(false)
+                } else {
+                    v.as_bool()
+                }
+            })
             .unwrap_or(false);
         
         Some(Printer {
@@ -93,7 +99,7 @@ pub async fn print_pdf(
     printer_name: String, 
     pdf_path: String,
     copies: Option<u32>,
-) -> Result<(), String> {
+) -> Result<String, String> {
     // Verify file exists
     if !std::path::Path::new(&pdf_path).exists() {
         return Err(format!("File not found: {}", pdf_path));
@@ -189,120 +195,98 @@ async fn print_pdf_windows(
     printer_name: &str, 
     pdf_path: &str,
     copies: Option<u32>,
-) -> Result<(), String> {
-    // Method: Use Microsoft Print to PDF or system printer via PowerShell
+) -> Result<String, String> {
     let copies = copies.unwrap_or(1);
     
     // Convert to absolute path
     let abs_path = std::fs::canonicalize(pdf_path)
-        .map_err(|e| format!("Failed to resolve path: {}", e))?
+        .map_err(|e| format!("步骤0-路径解析失败: 无法解析PDF路径 '{}': {}", pdf_path, e))?
         .to_string_lossy()
         .to_string();
     
-    // PowerShell script to print PDF silently
-    let ps_script = format!(
-        r#"
-        $printer = "{}"
-        $file = "{}"
-        $copies = {}
-        
-        # Create a print document
-        Add-Type -AssemblyName System.Drawing
-        
-        # Use Start-Process to open PDF with default handler and print
-        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $startInfo.FileName = " rundll32.exe"
-        $startInfo.Arguments = "shell32.dll,ShellExec_RunDLL `"$file`"", ",Print"
-        $startInfo.Verb = "Print"
-        $startInfo.UseShellExecute = $true
-        
-        $process = [System.Diagnostics.Process]::Start($startInfo)
-        if ($process) {{
-            Start-Sleep -Milliseconds 500
-        }}
-        "#,
-        printer_name.replace('"', "\\\""),
-        abs_path.replace('"', "\\\""),
-        copies
-    );
+    // Remove UNC prefix (\\?\) if present - many external programs can't handle UNC paths
+    let abs_path = if abs_path.starts_with(r"\\?\") {
+        abs_path[4..].to_string()
+    } else {
+        abs_path
+    };
     
-    let output = Command::new("powershell")
-        .args(["-Command", &ps_script])
-        .output()
-        .map_err(|e| format!("Failed to execute print command: {}", e))?;
-    
-    if !output.status.success() {
-        let _stderr = String::from_utf8_lossy(&output.stderr);
-        // Even if there's stderr, the print might have succeeded
-        // Try alternative method using Adobe Reader or Edge
-        return print_pdf_windows_alternative(printer_name, pdf_path, copies).await;
-    }
-    
-    Ok(())
+    // Use SumatraPDF only
+    try_sumatrapdf(printer_name, &abs_path, copies).await.map_err(|e| {
+        format!("{}", e)
+    })
 }
 
 #[cfg(target_os = "windows")]
-async fn print_pdf_windows_alternative(
-    printer_name: &str, 
-    pdf_path: &str,
-    copies: u32,
-) -> Result<(), String> {
-    // Try using Adobe Acrobat Reader if installed
-    let reader_paths = [
-        r"C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe",
-        r"C:\Program Files (x86)\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe",
-        r"C:\Program Files\Adobe\Acrobat Reader DC\Reader\AcroRd32.exe",
-    ];
+async fn try_sumatrapdf(printer_name: &str, pdf_path: &str, _copies: u32) -> Result<String, String> {
+    let mut sumatra_paths = vec![];
     
-    for reader_path in &reader_paths {
-        if std::path::Path::new(reader_path).exists() {
-            let args = if copies > 1 {
-                format!(
-                    "/t \"{}\" \"{}\" /n",
-                    pdf_path,
-                    printer_name
-                )
-            } else {
-                format!(
-                    "/t \"{}\" \"{}\"",
-                    pdf_path,
-                    printer_name
-                )
-            };
+    // 1. 首先检查与可执行文件同目录（打包后的标准位置）
+    if let Ok(exe_path) = std::env::current_exe() {
+        if let Some(exe_dir) = exe_path.parent() {
+            let sumatra_in_exe_dir = exe_dir.join("SumatraPDF.exe");
+            sumatra_paths.push(sumatra_in_exe_dir.to_string_lossy().to_string());
             
-            let _ = Command::new(reader_path)
-                .args(args.split_whitespace())
-                .spawn()
-                .map_err(|e| format!("Failed to launch Adobe Reader: {}", e))?;
-            
-            return Ok(());
+            // 2. 检查 resources 目录（Tauri 打包后的资源目录）
+            let sumatra_in_resources = exe_dir.join("resources").join("SumatraPDF.exe");
+            sumatra_paths.push(sumatra_in_resources.to_string_lossy().to_string());
         }
     }
     
-    // Fallback: Use Microsoft Edge
-    let edge_paths = [
-        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
-    ];
-    
-    for edge_path in &edge_paths {
-        if std::path::Path::new(edge_path).exists() {
-            let _ = Command::new(edge_path)
-                .args(["--headless", "--print-to-pdf-no-header", pdf_path])
-                .spawn()
-                .map_err(|e| format!("Failed to launch Edge: {}", e))?;
-            
-            return Ok(());
+    // 3. 开发模式：检查项目根目录
+    if let Ok(exe_path) = std::env::current_exe() {
+        if let Some(exe_dir) = exe_path.parent() {
+            // 开发时：target/debug/ -> 上溯查找项目根目录
+            let project_root = exe_dir
+                .parent()
+                .and_then(|p| p.parent())
+                .and_then(|p| p.parent());
+            if let Some(root) = project_root {
+                let sumatra_in_root = root.join("SumatraPDF.exe");
+                sumatra_paths.push(sumatra_in_root.to_string_lossy().to_string());
+            }
         }
     }
     
-    // Last resort: Use system default print
-    let _ = Command::new("cmd")
-        .args(["/c", "start", "/min", "", "print", pdf_path])
-        .spawn()
-        .map_err(|e| format!("Failed to execute print command: {}", e))?;
+    // 4. 系统安装路径（作为备选）
+    sumatra_paths.push(r"C:\Program Files\SumatraPDF\SumatraPDF.exe".to_string());
+    sumatra_paths.push(r"C:\Program Files (x86)\SumatraPDF\SumatraPDF.exe".to_string());
     
-    Ok(())
+    let mut checked_paths = Vec::new();
+    
+    for sumatra_path in &sumatra_paths {
+        checked_paths.push(sumatra_path.to_string());
+        
+        if std::path::Path::new(&sumatra_path).exists() {
+            if !std::path::Path::new(pdf_path).exists() {
+                return Err(format!("PDF文件不存在: {}", pdf_path));
+            }
+            
+            let args = vec![
+                "-print-to".to_string(),
+                printer_name.to_string(),
+                pdf_path.to_string(),
+            ];
+            
+            match Command::new(&sumatra_path).args(&args).output() {
+                Ok(output) => {
+                    let stderr = String::from_utf8_lossy(&output.stderr);
+                    
+                    if output.status.success() || stderr.is_empty() {
+                        return Ok(format!("SumatraPDF ({})", sumatra_path));
+                    } else {
+                        return Err(format!("SumatraPDF打印失败: {}", stderr));
+                    }
+                }
+                Err(e) => return Err(format!("启动SumatraPDF失败: {}", e)),
+            }
+        }
+    }
+    
+    Err(format!(
+        "未找到 SumatraPDF.exe\n\n已检查以下位置:\n{}\n\n请将 SumatraPDF.exe 放在以下任一位置:\n1. 与主程序 exe 同级目录\n2. 主程序目录下的 resources 文件夹\n3. 系统安装路径",
+        checked_paths.join("\n")
+    ))
 }
 
 // ==================== macOS Implementation ====================
@@ -363,7 +347,7 @@ async fn print_pdf_macos(
     printer_name: &str, 
     pdf_path: &str,
     copies: Option<u32>,
-) -> Result<(), String> {
+) -> Result<String, String> {
     let copies = copies.unwrap_or(1);
     
     // Convert to absolute path
@@ -398,7 +382,7 @@ async fn print_pdf_macos(
         return Err(format!("Print failed: {}", stderr));
     }
     
-    Ok(())
+    Ok("lp command".to_string())
 }
 
 // ==================== Linux Implementation ====================
@@ -459,7 +443,7 @@ async fn print_pdf_linux(
     printer_name: &str, 
     pdf_path: &str,
     copies: Option<u32>,
-) -> Result<(), String> {
+) -> Result<String, String> {
     let copies = copies.unwrap_or(1);
     
     // Convert to absolute path
@@ -494,7 +478,7 @@ async fn print_pdf_linux(
         return Err(format!("Print failed: {}", stderr));
     }
     
-    Ok(())
+    Ok("lp command".to_string())
 }
 
 /// Get default printer name
