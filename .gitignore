@@ -3,3 +3,6 @@ dist
 
 # Tauri build
 target/
+
+# External binaries
+SumatraPDF.exe
