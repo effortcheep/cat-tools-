@@ -84,11 +84,40 @@
   align-items: center;
 }
 
+.statusContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .status {
   display: flex;
   align-items: center;
   gap: 4px;
   color: #396cd8;
+}
+
+.errorDetail {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #c62828;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.errorDetail strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.errorDetail pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
 }
 
 .removeButton {
@@ -133,5 +162,10 @@
 
   .status {
     color: #5a8ad8;
+  }
+
+  .errorDetail {
+    background-color: #3a1a1a;
+    color: #ff8a80;
   }
 }

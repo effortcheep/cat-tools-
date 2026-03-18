@@ -76,16 +76,20 @@ export function PdfPrinterPage() {
         });
 
         // Print the PDF
-        await invoke("print_pdf", {
+        const printMethod = await invoke<string>("print_pdf", {
           printerName: printer,
           pdfPath: tempPath,
           copies: 1,
         });
 
-        // Update status to completed
+        // Update status to completed with print method info
         setFiles((prev) =>
           prev.map((f) =>
-            f.id === fileItem.id ? { ...f, status: "completed" as const } : f
+            f.id === fileItem.id ? { 
+              ...f, 
+              status: "completed" as const,
+              errorMessage: printMethod // Store print method info
+            } : f
           )
         );
         completedCount++;

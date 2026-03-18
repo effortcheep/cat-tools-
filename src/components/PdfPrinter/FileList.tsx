@@ -59,12 +59,19 @@ export function FileList(props: FileListProps) {
                   <div class={styles.fileMeta}>
                     {formatFileSize(item.file.size)}
                     <Show when={item.status !== "pending"}>
-                      <span class={styles.status}>
-                        {getStatusIcon(item.status)}
-                        {item.status === "printing" && " 打印中..."}
-                        {item.status === "completed" && " 完成"}
-                        {item.status === "error" && ` 失败: ${item.errorMessage}`}
-                      </span>
+                      <div class={styles.statusContainer}>
+                        <span class={styles.status}>
+                          {getStatusIcon(item.status)}
+                          {item.status === "printing" && " 打印中..."}
+                          {item.status === "completed" && ` 完成 (${item.errorMessage || "未知方式"})`}
+                        </span>
+                        <Show when={item.status === "error" && item.errorMessage}>
+                          <div class={styles.errorDetail}>
+                            <strong>失败详情:</strong>
+                            <pre>{item.errorMessage}</pre>
+                          </div>
+                        </Show>
+                      </div>
                     </Show>
                   </div>
                 </div>

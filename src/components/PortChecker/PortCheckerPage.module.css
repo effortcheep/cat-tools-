@@ -58,6 +58,10 @@
   border-radius: 6px;
   margin-bottom: 16px;
   font-size: 14px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .tableContainer {
